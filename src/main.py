@@ -10,6 +10,7 @@ from algorithms.linear_regression import LinearRegression
 from managers.file_manager import FileManager
 from managers.parser_manager import ParserManager
 
+
 if __name__ == '__main__':
     parser: ParserManager = ParserManager()
     parser.parse()
