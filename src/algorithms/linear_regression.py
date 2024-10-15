@@ -10,7 +10,7 @@ class LinearRegression:
     def __init__(self) -> None:
         pass
 
-    def normalize(self, x: list[int]) -> tuple[list[float], int, int]:
+    def normalize(self, x: list[int]) -> tuple[list[float], float, float]:
         """
         Normalizes a list of integer values to the range [0, 1].
 
@@ -29,7 +29,7 @@ class LinearRegression:
 
         Returns
         -------
-        tuple[list[float], int, int]
+        tuple[list[float], float, float]
             A tuple containing:
             - A list of normalized values as floats.
             - The minimum value from the input list.
@@ -46,12 +46,12 @@ class LinearRegression:
         100 300
         """
 
-        xmin: int = min(x)
-        xmax: int = max(x)
+        xmin: float = min(x)
+        xmax: float = max(x)
         nx: list[float] = [round((y - xmin) / (xmax - xmin), 8) for y in x]
         return nx, xmin, xmax
 
-    def normalize_input(self, mileage: float, xmin: int, xmax: int) -> float:
+    def normalize_input(self, mileage: float, xmin: float, xmax: float) -> float:
         """
         Normalizes the input mileage based on the minimum and maximum mileage values.
 
