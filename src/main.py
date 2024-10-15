@@ -25,14 +25,15 @@ if __name__ == '__main__':
     file_manager: FileManager = FileManager(path)
     linear_regression: LinearRegression = LinearRegression()
 
-    if parser.flag == "--training":
-        mileage, price = file_manager.read_csv()
-        normalized_mileage, xmin, xmax = linear_regression.normalize(mileage)
-    elif parser.flag == "--prediction":
+    if parser.flag == "--prediction":
         theta0, theta1, xmin, xmax = file_manager.read_json()
         mileage = float(input("Enter the mileage (in km) of the car: "))
         normalized_mileage = linear_regression.normalize_input(mileage, xmin, xmax)
         price = linear_regression.estimate_price(normalized_mileage, theta0, theta1)
         print(f"The estimated price for a car with {mileage} km is ${price:.2f}")
-    elif parser.flag == "--bonus":
-        pass
+    else:
+        mileage, price = file_manager.read_csv()
+        normalized_mileage, xmin, xmax = linear_regression.normalize(mileage)
+
+        if parser.flag == "--bonus":
+            pass
