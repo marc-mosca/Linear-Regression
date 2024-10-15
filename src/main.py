@@ -8,18 +8,23 @@
 from managers.file_manager import FileManager
 from managers.parser_manager import ParserManager
 
-
 if __name__ == '__main__':
     parser: ParserManager = ParserManager()
     parser.parse()
 
-    file_manager: FileManager
+    path: str = ""
 
-    if len(parser.path) != 0:
-        file_manager = FileManager(parser.path)
+    if parser.flag == "--training" or parser.flag == "--bonus":
+        path = parser.path if len(parser.path) > 0 else "./assets/data/car-price.csv"
     else:
-        file_manager = FileManager("./assets/data/car-price.csv")
+        path = parser.path if len(parser.path) > 0 else "./assets/data/linear_regression.json"
 
-    km, price = file_manager.read_csv()
-    print("km:", km)
-    print("price:", price)
+    file_manager: FileManager = FileManager(path)
+
+    if parser.flag == "--training":
+        km, price = file_manager.read_csv()
+        print(f"Km: {km}\nPrice: {price}")
+    elif parser.flag == "--prediction":
+        pass
+    elif parser.flag == "--bonus":
+        pass
