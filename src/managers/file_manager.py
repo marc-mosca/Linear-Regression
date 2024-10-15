@@ -59,8 +59,8 @@ class FileManager:
             with open(self.path, mode='r', newline='') as file:
                 reader = DictReader(file)
                 data: list[dict[str, Any]] = [row for row in reader]
-            km = [int(item['km']) for item in data]
-            price = [int(item['price']) for item in data]
+            km: list[int] = [int(item['km']) for item in data]
+            price: list[int] = [int(item['price']) for item in data]
             return km, price
         except FileNotFoundError:
             raise RuntimeError(f"The file {self.path} does not exist.")
