@@ -35,29 +35,33 @@ class FileManager:
 
         self.path = path
 
-    def read_csv(self) -> list[dict[str, Any]]:
+    def read_csv(self) -> tuple[list[int], list[int]]:
         """
-        Reads the content of a CSV file and returns it as a list of dictionaries.
+        Reads the content of a CSV file and extracts the 'km' and 'price' columns as two lists of integers.
 
-        Each row of the CSV file will be converted into a dictionary, where the keys are the column headers, and the
-        values correspond to the data in each row.
+        This method reads a CSV file, assuming it contains two columns: 'km' and 'price'. It converts these values to
+        integers and returns them as two separate lists.
 
         Returns
         -------
-        list[dict[str, Any]]
-            A list of dictionaries, where each dictionary represents a row in the CSV file.
+        tuple[list[int], list[int]]
+            A tuple containing two lists:
+            - The first list contains the 'km' values as integers.
+            - The second list contains the 'price' values as integers.
 
         Raises
         ------
         RuntimeError
-            If the file does not exist or if an error occurs during reading.
+            If the file does not exist or if an error occurs during the reading process.
         """
 
         try:
             with open(self.path, mode='r', newline='') as file:
                 reader = DictReader(file)
                 data: list[dict[str, Any]] = [row for row in reader]
-            return data
+            km = [int(item['km']) for item in data]
+            price = [int(item['price']) for item in data]
+            return km, price
         except FileNotFoundError:
             raise RuntimeError(f"The file {self.path} does not exist.")
         except Exception as e:

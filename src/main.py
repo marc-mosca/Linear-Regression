@@ -12,7 +12,6 @@ from managers.parser_manager import ParserManager
 if __name__ == '__main__':
     parser: ParserManager = ParserManager()
     parser.parse()
-    print(f"Flag: '{parser.flag}'\nPath: '{parser.path}'")
 
     file_manager: FileManager
 
@@ -21,5 +20,6 @@ if __name__ == '__main__':
     else:
         file_manager = FileManager("./assets/data/car-price.csv")
 
-    data = file_manager.read_csv()
-    print(data)
+    km, price = file_manager.read_csv()
+    print("km:", km)
+    print("price:", price)
