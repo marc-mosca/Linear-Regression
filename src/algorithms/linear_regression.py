@@ -50,3 +50,55 @@ class LinearRegression:
         xmax: int = max(x)
         nx: list[float] = [round((y - xmin) / (xmax - xmin), 8) for y in x]
         return nx, xmin, xmax
+
+    def normalize_input(self, mileage: float, xmin: int, xmax: int) -> float:
+        """
+        Normalizes the input mileage based on the minimum and maximum mileage values.
+
+        This method scales the mileage to a range between 0 and 1 using the provided minimum (xmin) and maximum (xmax)
+        mileage values. Normalization helps to bring the mileage into a consistent range for model estimation.
+
+        Parameters
+        ----------
+        mileage : float
+            The mileage of the car to be normalized.
+
+        xmin : int
+            The minimum mileage value used for normalization.
+
+        xmax : int
+            The maximum mileage value used for normalization.
+
+        Returns
+        -------
+        float
+            The normalized mileage value, calculated as (mileage - xmin) / (xmax - xmin).
+        """
+
+        return (mileage - xmin) / (xmax - xmin)
+
+    def estimate_price(self, mileage: float, theta0: float, theta1: float) -> float:
+        """
+        Estimates the price of a car based on its normalized mileage using a linear model.
+
+        This method uses the linear regression formula `price = theta0 + theta1 * mileage` to estimate the price of the
+        car. The mileage is expected to be normalized (scaled between 0 and 1).
+
+        Parameters
+        ----------
+        mileage : float
+            The normalized mileage of the car (between 0 and 1).
+
+        theta0 : float
+            The intercept of the linear regression model.
+
+        theta1 : float
+            The slope of the linear regression model.
+
+        Returns
+        -------
+        float
+            The estimated price of the car, based on the linear model.
+        """
+
+        return theta0 + (theta1 * mileage)
