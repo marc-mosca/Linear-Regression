@@ -67,31 +67,40 @@ class FileManager:
         except Exception as e:
             raise RuntimeError(f"An error occurred while reading the CSV file: {e}")
 
-    def read_json(self) -> dict[str, Any]:
+    def read_json(self) -> tuple[float, float, float, float]:
         """
-        Reads the content of a JSON file and returns it as a dictionary.
+        Reads a JSON file and extracts the model parameters for linear regression.
+
+        This method reads a JSON file from the specified path and extracts four key parameters:
+        `theta0`, `theta1`, `xmin`, and `xmax`, which are used in the linear regression model.
+
+        In case of a JSON decoding error, it raises a `RuntimeError` to indicate invalid JSON format.
+        If any other exception occurs (such as file-related issues), it returns default values of
+        0.0 for `theta0`, `theta1`, and `xmin`, and 1.0 for `xmax` to ensure the program doesn't crash.
 
         Returns
         -------
-        dict[str, Any]
-            A dictionary representing the content of the JSON file.
+        tuple[float, float, float, float]
+            A tuple containing four values:
+            - theta0 (float): The intercept of the linear regression model.
+            - theta1 (float): The slope of the linear regression model.
+            - xmin (float): The minimum value for mileage used in normalization.
+            - xmax (float): The maximum value for mileage used in normalization.
 
         Raises
         ------
         RuntimeError
-            If the file does not exist, contains invalid JSON, or if an error occurs during reading.
+            If the JSON file contains invalid JSON data.
         """
 
         try:
             with open(self.path, mode='r') as file:
                 data: dict[str, Any] = load(file)
-            return data
-        except FileNotFoundError:
-            raise RuntimeError(f"The file {self.path} does not exist.")
+            return data['theta0'], data['theta1'], data['xmin'], data['xmax']
         except JSONDecodeError:
             raise RuntimeError(f"The file {self.path} contains invalid JSON.")
         except Exception as e:
-            raise RuntimeError(f"An error occurred while reading the JSON file: {e}")
+            return 0.0, 0.0, 0.0, 1.0
 
     def write_json(self, path: str, data: dict[str, Any]) -> None:
         """
