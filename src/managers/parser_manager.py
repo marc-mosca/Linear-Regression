@@ -11,8 +11,8 @@ from os import path, access, R_OK
 
 class ParserManager(object):
     """
-    A class to manage and parse command-line arguments for the program. It validates
-    a required flag and an optional file path.
+    A class to manage and parse command-line arguments for the program. It validates a required flag and an optional
+    file path.
 
     Attributes
     ----------
@@ -30,8 +30,8 @@ class ParserManager(object):
 
     def __init__(self) -> None:
         """
-        Initializes the ParserManager instance. Extracts command-line arguments
-        from the global sys.argv list, skipping the program name.
+        Initializes the ParserManager instance. Extracts command-line arguments from the global sys.argv list, skipping
+        the program name.
         """
 
         self.arguments = argv[1:]
