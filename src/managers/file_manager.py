@@ -125,6 +125,7 @@ class FileManager:
         except JSONDecodeError:
             raise RuntimeError(f"The file {self.path} contains invalid JSON.")
         except Exception as e:
+            print(f"Model file {self.path} not found, initializing theta to 0.")
             return 0.0, 0.0, 0.0, 1.0
 
     def write_json(self, path: str, data: dict[str, Any]) -> None:
