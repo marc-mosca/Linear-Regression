@@ -26,11 +26,6 @@ def draw_data_and_regression(mileages: list[list[float]], prices: list[list[floa
     xmax : float
         The maximum value of the mileage used for normalization.
 
-    Returns
-    -------
-    None
-        This function does not return any value. It plots the scatter plot of the data points and the regression line.
-
     Notes
     -----
     - The function normalizes the mileage range from `xmin` to `xmax` and calculates predicted prices using the
