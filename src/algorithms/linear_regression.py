@@ -6,8 +6,27 @@
 #
 
 class LinearRegression:
+    """
+    A class to represent a linear regression model with methods for data normalization, model prediction, gradient
+    calculation, and optimization using gradient descent.
+
+    This class provides various methods to perform key tasks in linear regression, such as normalizing the data,
+    predicting outcomes based on input features, calculating gradients for optimization, and adjusting model parameters
+    through gradient descent.
+    """
 
     def __init__(self) -> None:
+        """
+        Initializes the LinearRegression class with no attributes.
+
+        The constructor method for the LinearRegression class does not initialize any instance-level attributes.
+        It is an empty constructor that provides the basic structure for future model training and prediction.
+
+        Example
+        -------
+        model = LinearRegression()  # Creates a new instance of the LinearRegression class
+        """
+
         pass
 
     def normalize(self, matrix: list[list[float]]) -> list[list[float]]:
