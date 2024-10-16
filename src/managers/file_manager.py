@@ -5,7 +5,7 @@
 #   Created by Marc MOSCA on 15/10/2024.
 #
 
-from csv import DictReader
+from csv import reader
 from json import dump, load, JSONDecodeError
 from typing import Any
 
@@ -35,33 +35,58 @@ class FileManager:
 
         self.path = path
 
-    def read_csv(self) -> tuple[list[int], list[int]]:
+    def read_csv(self) -> tuple[list[list[float]], list[list[float]]]:
         """
-        Reads the content of a CSV file and extracts the 'km' and 'price' columns as two lists of integers.
+        Reads a CSV file and extracts mileage and price data.
 
-        This method reads a CSV file, assuming it contains two columns: 'km' and 'price'. It converts these values to
-        integers and returns them as two separate lists.
+        This method reads a CSV file where the first column contains mileage values and the second column contains price
+        values. The mileage and price values are extracted, converted to floating-point numbers, and stored in two
+        separate 2D lists. Each value is encapsulated in its own list, effectively creating a column vector format for
+        further matrix-based operations.
 
         Returns
         -------
-        tuple[list[int], list[int]]
-            A tuple containing two lists:
-            - The first list contains the 'km' values as integers.
-            - The second list contains the 'price' values as integers.
+        tuple[list[list[float]], list[list[float]]]
+            A tuple containing two 2D lists:
+            - The first list represents mileage values, where each element is a list containing a single float.
+            - The second list represents price values, where each element is a list containing a single float.
 
         Raises
         ------
         RuntimeError
-            If the file does not exist or if an error occurs during the reading process.
+            If the file does not exist or an error occurs during reading.
+
+        Example
+        -------
+        If the CSV file contains:
+
+        ```
+        km,price
+        240000,3650
+        139800,3800
+        ```
+
+        After calling `read_csv()`, the result will be:
+        ([[240000.0], [139800.0]], [[3650.0], [3800.0]])
+
+        Notes
+        -----
+        - The CSV file must have a header row, which will be skipped.
+        - Each mileage and price value is stored as a float in a list for compatibility with matrix-based operations.
         """
+
+        mileage: list[list[float]] = []
+        price: list[list[float]] = []
 
         try:
             with open(self.path, mode='r', newline='') as file:
-                reader = DictReader(file)
-                data: list[dict[str, Any]] = [row for row in reader]
-            km: list[int] = [int(item['km']) for item in data]
-            price: list[int] = [int(item['price']) for item in data]
-            return km, price
+                r = reader(file)
+                next(r)
+                for row in r:
+                    mileage.append([float(row[0])])
+                    price.append([float(row[1])])
+
+            return mileage, price
         except FileNotFoundError:
             raise RuntimeError(f"The file {self.path} does not exist.")
         except Exception as e:
