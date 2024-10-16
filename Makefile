@@ -8,9 +8,9 @@
 .DEFAULT_GOAL := help
 
 .PHONY: bonus
-bonus: ## Executes the bonus training program with "./assets/data/car-price.csv" file.
+bonus: ## Executes the bonus training program with "./assets/data/data.csv" file.
 	$(MAKE) install
-	python3 src/main.py --bonus ./assets/data/car-price.csv
+	python3 src/main.py --bonus ./assets/data/data.csv
 
 .PHONY: help
 help: ## Displays this help menu of commands available for the project.
@@ -29,6 +29,6 @@ prediction: ## Executes the prediction program.
 	python3 src/main.py --prediction
 
 .PHONY: training
-training: ## Executes the training program with "./assets/data/car-price.csv" file.
+training: ## Executes the training program with "./assets/data/data.csv" file.
 	$(MAKE) install
-	python3 src/main.py --training ./assets/data/car-price.csv
+	python3 src/main.py --training ./assets/data/data.csv
