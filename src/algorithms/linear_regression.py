@@ -10,46 +10,42 @@ class LinearRegression:
     def __init__(self) -> None:
         pass
 
-    def normalize(self, x: list[int]) -> tuple[list[float], float, float]:
+    def normalize(self, matrix: list[list[float]]) -> list[list[float]]:
         """
-        Normalizes a list of integer values to the range [0, 1].
+        Normalizes the values in a 2D matrix (list of lists).
 
-        This method takes a list of integers as input, calculates the minimum and maximum values, and returns the
-        normalized values as a list of floats.
-        The normalized values are scaled using the formula:
+        This method takes a 2D matrix of floating-point numbers and normalizes each value based on the formula:
+        `(value - min) / (max - min)`, where `min` is the smallest value in the matrix and `max` is the largest value in
+        the matrix. The normalization ensures that all values in the matrix are scaled between 0 and 1, based on the
+        minimum and maximum values.
 
-            normalized_value = (value - min_value) / (max_value - min_value)
-
-        The method rounds each normalized value to 8 decimal places.
+        It utilizes the private methods `__matrix_min` and `__matrix_max` to find the smallest and largest values in the
+        matrix.
 
         Parameters
         ----------
-        x : list[int]
-            A list of integers representing the values to be normalized.
+        matrix : list[list[float]]
+            A 2D list (matrix) where each inner list represents a row containing floating-point numbers.
 
         Returns
         -------
-        tuple[list[float], float, float]
-            A tuple containing:
-            - A list of normalized values as floats.
-            - The minimum value from the input list.
-            - The maximum value from the input list.
+        list[list[float]]
+            A new 2D list where each value in the original matrix has been normalized between 0 and 1.
 
         Example
         -------
-        >>> model = LinearRegression()
-        >>> x = [100, 200, 300]
-        >>> normalized, xmin, xmax = model.normalize(x)
-        >>> print(normalized)
-        [0.0, 0.5, 1.0]
-        >>> print(xmin, xmax)
-        100 300
+        matrix = [[1.0], [5.0], [10.0]]
+        result = normalize(matrix)  # Returns [[0.0], [0.4444], [1.0]]
+
+        Notes
+        -----
+        - If all the values in the matrix are the same, the normalization formula will result in division by zero.
+          Handling such edge cases should be added based on your needs.
         """
 
-        xmin: float = min(x)
-        xmax: float = max(x)
-        nx: list[float] = [round((y - xmin) / (xmax - xmin), 8) for y in x]
-        return nx, xmin, xmax
+        xmin: float = self.__matrix_min(matrix)
+        xmax: float = self.__matrix_max(matrix)
+        return [[(item[0] - xmin) / (xmax - xmin)] for item in matrix]
 
     def normalize_input(self, mileage: float, xmin: float, xmax: float) -> float:
         """
@@ -102,3 +98,220 @@ class LinearRegression:
         """
 
         return theta0 + (theta1 * mileage)
+
+    ## MARK: - Private Methods
+
+    def __matrix_min(self, matrix: list[list[float]]) -> float:
+        """
+        Finds the minimum value in a 2D matrix (list of lists).
+
+        This private method iterates through each row of the matrix and computes the minimum value for each row. It then
+        returns the smallest of these values, effectively providing the minimum value of the entire matrix.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            A 2D list (matrix) where each inner list represents a row containing floating-point numbers.
+
+        Returns
+        -------
+        float
+            The minimum value found in the matrix.
+
+        Example
+        -------
+        matrix = [[1.0, 2.5, 3.2], [4.0, 0.1, 5.7]]
+        result = __matrix_min(matrix)  # Returns 0.1
+        """
+
+        return min(min(row) for row in matrix)
+
+    def __matrix_max(self, matrix: list[list[float]]) -> float:
+        """
+        Finds the maximum value in a 2D matrix (list of lists).
+
+        This private method iterates through each row of the matrix and computes the maximum value for each row. It then
+        returns the largest of these values, effectively providing the maximum value of the entire matrix.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            A 2D list (matrix) where each inner list represents a row containing floating-point numbers.
+
+        Returns
+        -------
+        float
+            The maximum value found in the matrix.
+
+        Example
+        -------
+        matrix = [[1.0, 2.5, 3.2], [4.0, 0.1, 5.7]]
+        result = __matrix_max(matrix)  # Returns 5.7
+        """
+
+        return max(max(row) for row in matrix)
+
+    def __matrix_multiply(self, a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
+        """
+        Multiplies two matrices and returns the resulting matrix.
+
+        Parameters
+        ----------
+        a : list[list[float]]
+            The first matrix to multiply, with dimensions m x n.
+        b : list[list[float]]
+            The second matrix to multiply, with dimensions n x p.
+
+        Returns
+        -------
+        list[list[float]]
+            The resulting matrix of dimensions m x p.
+
+        Raises
+        ------
+        ValueError
+            If the number of columns in the first matrix does not match the number of rows in the second matrix.
+
+        Notes
+        -----
+        - Matrix multiplication is only possible if the number of columns in matrix `a` matches the number of rows in
+          matrix `b`.
+        - The returned matrix will have dimensions of the number of rows in `a` and the number of columns in `b`.
+        """
+
+        if len(a[0]) != len(b):
+            raise ValueError("The number of columns in the first matrix must correspond to the number of rows in the second matrix.")
+        transposed: list[tuple[float]] = list(zip(*b))
+        return [[sum(x * y for x, y in zip(row_a, col_b)) for col_b in transposed] for row_a in a]
+
+    def __matrix_substract(self, a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
+        """
+        Subtracts one matrix from another element-wise.
+
+        Parameters
+        ----------
+        a : list[list[float]]
+            The first matrix (minuend).
+        b : list[list[float]]
+            The second matrix (subtrahend).
+
+        Returns
+        -------
+        list[list[float]]
+            The resulting matrix after subtraction.
+
+        Notes
+        -----
+        - The matrices `a` and `b` must have the same dimensions.
+        - Subtracts each element of `b` from the corresponding element in `a`.
+        """
+
+        return [[a[i][j] - b[i][j] for j in range(len(a[0]))] for i in range(len(a))]
+
+    def __matrix_square(self, matrix: list[list[float]]) -> list[list[float]]:
+        """
+        Squares each element of a matrix.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            The matrix to square element-wise.
+
+        Returns
+        -------
+        list[list[float]]
+            The resulting matrix where each element is squared.
+
+        Notes
+        -----
+        - Each element in the matrix is raised to the power of 2.
+        """
+
+        return [[matrix[i][j] ** 2 for j in range(len(matrix[0]))] for i in range(len(matrix))]
+
+    def __matrix_sum(self, matrix: list[list[float]]) -> float:
+        """
+        Computes the sum of all elements in a matrix.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            The matrix whose elements will be summed.
+
+        Returns
+        -------
+        float
+            The sum of all the elements in the matrix.
+
+        Notes
+        -----
+        - Iterates over all rows and columns to compute the sum.
+        """
+
+        return sum(sum(row) for row in matrix)
+
+    def __matrix_transpose(self, matrix: list[list[float]]) -> list[float]:
+        """
+        Transposes a matrix (switches rows with columns).
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            The matrix to transpose.
+
+        Returns
+        -------
+        list[list[float]]
+            The transposed matrix.
+
+        Notes
+        -----
+        - The resulting matrix will have its rows and columns swapped.
+        """
+
+        return list(map(list, zip(*matrix)))
+
+    def __matrix_scalar(self, matrix: list[list[float]], scalar: float) -> list[list[float]]:
+        """
+        Multiplies each element of a matrix by a scalar.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            The matrix to multiply by the scalar.
+        scalar : float
+            The scalar value to multiply each matrix element by.
+
+        Returns
+        -------
+        list[list[float]]
+            The resulting matrix after scalar multiplication.
+
+        Notes
+        -----
+        - Each element in the matrix is multiplied by the scalar.
+        """
+
+        return [[element * scalar for element in row] for row in matrix]
+
+    def __matrix_mean(self, matrix: list[list[float]]) -> float:
+        """
+        Computes the mean (average) of all elements in a matrix.
+
+        Parameters
+        ----------
+        matrix : list[list[float]]
+            The matrix whose mean will be computed.
+
+        Returns
+        -------
+        float
+            The mean value of all elements in the matrix.
+
+        Notes
+        -----
+        - The mean is calculated by dividing the sum of all elements by the total number of elements.
+        - Uses `__matrix_sum` to calculate the sum of all elements.
+        """
+
+        return self.__matrix_sum(matrix) / (len(matrix) * len(matrix[0]))
