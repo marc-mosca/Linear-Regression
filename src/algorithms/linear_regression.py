@@ -99,6 +99,126 @@ class LinearRegression:
 
         return theta0 + (theta1 * mileage)
 
+    def model(self, x: list[list[float]], theta: list[list[float]]) -> list[list[float]]:
+        """
+        Computes the linear model predictions based on input data and parameters (theta).
+
+        Parameters
+        ----------
+        x : list[list[float]]
+            The input feature matrix, where each row represents an observation and each column a feature.
+        theta : list[list[float]]
+            The parameter matrix (weights), where each element represents a coefficient for the corresponding feature.
+
+        Returns
+        -------
+        list[list[float]]
+            The predicted values (hypothesis) as a matrix.
+
+        Notes
+        -----
+        - Uses matrix multiplication to compute the hypothesis: `x * theta`.
+        """
+
+        return self.__matrix_multiply(x, theta)
+
+    def gradient(self, x: list[list[float]], y: list[list[float]], theta: list[list[float]]) -> list[list[float]]:
+        """
+        Computes the gradient of the cost function for linear regression.
+
+        Parameters
+        ----------
+        x : list[list[float]]
+            The input feature matrix, where each row represents an observation and each column a feature.
+        y : list[list[float]]
+            The output target values matrix.
+        theta : list[list[float]]
+            The parameter matrix (weights).
+
+        Returns
+        -------
+        list[list[float]]
+            The gradient matrix representing the partial derivatives of the cost function with respect to theta.
+
+        Notes
+        -----
+        - The gradient is calculated as: `(1/m) * X^T * (X * theta - y)`, where `m` is the number of observations.
+        """
+
+        m: int = len(x)
+        predictions: list[list[float]] = self.model(x, theta)
+        errors: list[list[float]] = self.__matrix_substract(predictions, y)
+        transposed_x: list[float] = self.__matrix_transpose(x)
+        grad: list[list[float]] = self.__matrix_multiply(transposed_x, errors)
+        return [[element * (1 / m) for element in row] for row in grad]
+
+    def gradient_descent(self, x: list[list[float]], y: list[list[float]], theta: list[list[float]], learning_rate: float, n_iterations: int) -> list[list[float]]:
+        """
+        Performs gradient descent to optimize the parameters (theta) of a linear regression model.
+
+        Parameters
+        ----------
+        x : list[list[float]]
+            The input feature matrix, where each row represents an observation and each column a feature.
+        y : list[list[float]]
+            The output target values matrix.
+        theta : list[list[float]]
+            The initial parameter matrix (weights).
+        learning_rate : float
+            The learning rate, which determines the step size in each iteration.
+        n_iterations : int
+            The number of iterations to perform gradient descent.
+
+        Returns
+        -------
+        list[list[float]]
+            The optimized parameter matrix after performing gradient descent.
+
+        Notes
+        -----
+        - Updates `theta` in each iteration using: `theta = theta - learning_rate * gradient`.
+        - The process repeats for `n_iterations`.
+        """
+
+        for i in range(n_iterations):
+            gradient: list[list[float]] = self.gradient(x, y, theta)
+            updated_theta: list[list[float]] = self.__matrix_scalar(gradient, learning_rate)
+            theta = self.__matrix_substract(theta, updated_theta)
+        return theta
+
+    def coefficients_determination(self, y: list[list[float]], predictions: list[list[float]]) -> float:
+        """
+        Calculates the coefficient of determination (R-squared) for the predictions of a linear regression model.
+
+        Parameters
+        ----------
+        y : list[list[float]]
+            The actual output target values matrix.
+        predictions : list[list[float]]
+            The predicted output values matrix from the model.
+
+        Returns
+        -------
+        float
+            The R-squared value, representing the proportion of the variance in the dependent variable explained by the
+            model.
+
+        Notes
+        -----
+        - R-squared is calculated as: `1 - (sum of squared errors / total sum of squares)`.
+        - The sum of squared errors is the difference between the actual and predicted values, squared.
+        - The total sum of squares is the variance of the actual output values.
+        """
+
+        errors: list[list[float]] = self.__matrix_substract(y, predictions)
+        squared_errors: list[list[float]] = self.__matrix_square(errors)
+        matrix_y_mean: list[list[float]] = [[self.__matrix_mean(y)] * len(y[0]) for _ in range(len(y))]
+        deviations: list[list[float]] = self.__matrix_substract(y, matrix_y_mean)
+        squared_deviations: list[list[float]] = self.__matrix_square(deviations)
+        u: float = self.__matrix_sum(squared_errors)
+        v: float = self.__matrix_sum(squared_deviations)
+        return 1 - (u / v)
+
     ## MARK: - Private Methods
 
     def __matrix_min(self, matrix: list[list[float]]) -> float:

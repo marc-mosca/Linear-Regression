@@ -19,7 +19,7 @@ if __name__ == '__main__':
     path: str = ""
 
     if parser.flag == "--training" or parser.flag == "--bonus":
-        path = parser.path if len(parser.path) > 0 else "./assets/data/car-price.csv"
+        path = parser.path if len(parser.path) > 0 else "./assets/data/data.csv"
     else:
         path = parser.path if len(parser.path) > 0 else "./assets/data/linear_regression.json"
 
@@ -43,7 +43,21 @@ if __name__ == '__main__':
         theta: list[list[float]] = [[uniform(-0.01, 0.01)], [uniform(-0.01, 0.01)]]
 
         n_iterations: int = 1000
-        learning_rate: float = 0.07
+        learning_rate: float = 0.12
+
+        theta = linear_regression.gradient_descent(matrix_x, matrix_y, theta, learning_rate, n_iterations)
+
+        data: dict[str: float] = {
+            "theta0": theta[1][0],
+            "theta1": theta[0][0],
+            "xmin": min(min(row) for row in mileages),
+            "xmax": max(max(row) for row in mileages)
+        }
+        file_manager.write_json("./assets/data/linear_regression.json", data)
+
+        print(f"Training completed. Model saved in ./assets/data/linear_regression.json")
 
         if parser.flag == "--bonus":
-            pass
+            predictions: list[list[float]] = linear_regression.model(matrix_x, theta)
+            r_squared: float = linear_regression.coefficients_determination(matrix_y, predictions)
+            print(f"Model accuracy (R^2 score): {round(r_squared, 4) * 100} %")
