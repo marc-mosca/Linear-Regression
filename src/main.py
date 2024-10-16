@@ -12,6 +12,8 @@ from algorithms.linear_regression import LinearRegression
 from managers.file_manager import FileManager
 from managers.parser_manager import ParserManager
 
+from ui.draw_data_and_regression import draw_data_and_regression
+
 if __name__ == '__main__':
     parser: ParserManager = ParserManager()
     parser.parse()
@@ -38,26 +40,25 @@ if __name__ == '__main__':
         normalized_mileages: list[list[float]] = linear_regression.normalize(mileages)
         biais: list[list[float]] = [[1.0]] * len(normalized_mileages)
 
+        xmin: float = min(min(row) for row in mileages)
+        xmax: float = max(max(row) for row in mileages)
+
         matrix_x: list[list[float]] = [m + p for m, p in zip(normalized_mileages, biais)]
         matrix_y: list[list[float]] = prices
         theta: list[list[float]] = [[uniform(-0.01, 0.01)], [uniform(-0.01, 0.01)]]
 
         n_iterations: int = 1000
-        learning_rate: float = 0.12
+        learning_rate: float = 0.07
 
         theta = linear_regression.gradient_descent(matrix_x, matrix_y, theta, learning_rate, n_iterations)
 
-        data: dict[str: float] = {
-            "theta0": theta[1][0],
-            "theta1": theta[0][0],
-            "xmin": min(min(row) for row in mileages),
-            "xmax": max(max(row) for row in mileages)
-        }
+        data: dict[str: float] = {"theta0": theta[1][0], "theta1": theta[0][0], "xmin": xmin, "xmax": xmax}
         file_manager.write_json("./assets/data/linear_regression.json", data)
 
         print(f"Training completed. Model saved in ./assets/data/linear_regression.json")
 
         if parser.flag == "--bonus":
+            draw_data_and_regression(mileages, prices, theta, xmin, xmax)
             predictions: list[list[float]] = linear_regression.model(matrix_x, theta)
             r_squared: float = linear_regression.coefficients_determination(matrix_y, predictions)
             print(f"Model accuracy (R^2 score): {round(r_squared, 4) * 100} %")
