@@ -5,6 +5,8 @@
 #   Created by Marc MOSCA on 15/10/2024.
 #
 
+from sys import exit
+
 
 class Matrix(object):
     values: list[list[float]]
@@ -29,7 +31,7 @@ class Matrix(object):
 
     def multiply(self, matrix: list[list[float]]) -> list[list[float]]:
         if len(self.values[0]) != len(matrix):
-            raise ValueError("The number of columns in the first matrix must correspond to the number of rows in the second matrix.")
+            exit("The number of columns in the first matrix must correspond to the number of rows in the second matrix.")
         return [[sum(m * n for m, n in zip(i, j)) for j in zip(*matrix)] for i in self.values]
 
     def transpose(self) -> list[list[float]]:

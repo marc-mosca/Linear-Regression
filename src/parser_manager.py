@@ -6,7 +6,7 @@
 #
 
 from config import DATASET_PATH, TRAINED_MODEL_PATH
-from sys import argv
+from sys import argv, exit
 from os import path, access, R_OK
 
 
@@ -24,12 +24,12 @@ class ParserManager(object):
         length: int = len(self.arguments)
 
         if length < 1 or length > 2:
-            raise RuntimeError("One or two arguments are required: a flag and an optional file path.")
+            exit("One or two arguments are required: a flag and an optional file path.")
 
         self.flag = self.arguments[0]
 
         if self.flag not in ["--training", "--prediction", "--bonus"]:
-            raise RuntimeError(f"Invalid flag '{self.flag}'. Valid flags are '--training', '--prediction', '--bonus'.")
+            exit(f"Invalid flag '{self.flag}'. Valid flags are '--training', '--prediction', '--bonus'.")
 
         if length != 2:
             self.path = TRAINED_MODEL_PATH if self.flag == "--prediction" else DATASET_PATH
@@ -37,8 +37,8 @@ class ParserManager(object):
             self.path = self.arguments[1]
 
             if not (self.path.endswith(".csv") or self.path.endswith(".json")):
-                raise RuntimeError(f"Invalid file type '{self.path}'. Only .csv and .json files are allowed.")
+                exit(f"Invalid file type '{self.path}'. Only .csv and .json files are allowed.")
             elif not path.isfile(self.path):
-                raise RuntimeError(f"File '{self.path}' does not exist.")
+                exit(f"File '{self.path}' does not exist.")
             elif not access(self.path, R_OK):
-                raise RuntimeError(f"File '{self.path}' is not readable.")
+                exit(f"File '{self.path}' is not readable.")

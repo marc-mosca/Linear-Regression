@@ -7,6 +7,7 @@
 
 from csv import reader
 from matrix import Matrix
+from sys import exit
 
 
 class Dataset(object):
@@ -27,6 +28,6 @@ class Dataset(object):
                     self.target.values.append([float(row[1])])
                     self.features.values.append([float(row[0])])
         except FileNotFoundError:
-            raise RuntimeError(f"The file {path} does not exist.")
+            exit(f"The file {path} does not exist.")
         except Exception as e:
-            raise RuntimeError(f"An error occurred while reading the CSV file: {e}")
+            exit(f"An error occurred while reading the CSV file: {e}")
