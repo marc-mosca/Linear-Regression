@@ -7,3 +7,5 @@
 
 .idea/
 .venv/
+
+notebooks/.ipynb_checkpoints/
