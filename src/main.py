@@ -5,60 +5,54 @@
 #   Created by Marc MOSCA on 15/10/2024.
 #
 
+from config import TRAINED_MODEL_PATH
+from dataset import Dataset
+from linear_regression import LinearRegression
+from matrix import Matrix
+from parser_manager import ParserManager
+from plot import Plot
 from random import uniform
+from utils import read_json, write_json
 
-from algorithms.linear_regression import LinearRegression
-
-from managers.file_manager import FileManager
-from managers.parser_manager import ParserManager
-
-from ui.draw_data_and_regression import draw_data_and_regression
 
 if __name__ == '__main__':
     parser: ParserManager = ParserManager()
     parser.parse()
 
-    path: str = ""
-
-    if parser.flag == "--training" or parser.flag == "--bonus":
-        path = parser.path if len(parser.path) > 0 else "./assets/data/data.csv"
-    else:
-        path = parser.path if len(parser.path) > 0 else "./assets/data/linear_regression.json"
-
-    file_manager: FileManager = FileManager(path)
-    linear_regression: LinearRegression = LinearRegression()
+    plot: Plot = Plot()
+    linear_regression: LinearRegression = LinearRegression(1000, 0.07)
 
     if parser.flag == "--prediction":
-        theta0, theta1, xmin, xmax = file_manager.read_json()
+        theta, xmin, xmax = read_json(parser.path)
         mileage: float = float(input("Enter the mileage (in km) of the car: "))
-        normalized_mileage: float = linear_regression.normalize_input(mileage, xmin, xmax)
-        price: float = linear_regression.estimate_price(normalized_mileage, theta0, theta1)
+        normalized_mileage: float = linear_regression.normalize(mileage, xmin, xmax)
+        price: float = linear_regression.model(normalized_mileage, theta)
         print(f"The estimated price for a car with {mileage} km is ${price:.2f}")
     else:
-        mileages, prices = file_manager.read_csv()
+        dataset: Dataset = Dataset(parser.path)
+        plot.draw_dataset(dataset.target, dataset.features)
 
-        normalized_mileages: list[list[float]] = linear_regression.normalize(mileages)
-        biais: list[list[float]] = [[1.0]] * len(normalized_mileages)
+        xmin: float = dataset.features.min()
+        xmax: float = dataset.features.max()
 
-        xmin: float = min(min(row) for row in mileages)
-        xmax: float = max(max(row) for row in mileages)
+        normalized_features: Matrix = Matrix([[linear_regression.normalize(value, xmin, xmax)] for [value] in dataset.features.values])
+        bias: Matrix = Matrix([[1.0]] * len(dataset.target.values))
 
-        matrix_x: list[list[float]] = [m + p for m, p in zip(normalized_mileages, biais)]
-        matrix_y: list[list[float]] = prices
-        theta: list[list[float]] = [[uniform(-0.01, 0.01)], [uniform(-0.01, 0.01)]]
+        plot.draw_normalize_features(dataset.features, normalized_features)
 
-        n_iterations: int = 1000
-        learning_rate: float = 0.07
+        x: Matrix = Matrix([f + b for f, b in zip(normalized_features.values, bias.values)])
+        y: Matrix = dataset.target
+        theta: Matrix = Matrix([[uniform(-0.01, 0.01)], [uniform(-0.01, 0.01)]])
 
-        theta = linear_regression.gradient_descent(matrix_x, matrix_y, theta, learning_rate, n_iterations)
+        theta = linear_regression.gradient_descent(x, y, theta)
 
-        data: dict[str: float] = {"theta0": theta[1][0], "theta1": theta[0][0], "xmin": xmin, "xmax": xmax}
-        file_manager.write_json("./assets/data/linear_regression.json", data)
+        data: dict[str: float] = {"theta0": theta.values[1][0], "theta1": theta.values[0][0], "xmin": xmin, "xmax": xmax}
+        write_json(TRAINED_MODEL_PATH, data)
 
-        print(f"Training completed. Model saved in ./assets/data/linear_regression.json")
+        print(f"Training completed. Model saved in '{TRAINED_MODEL_PATH}'.")
 
         if parser.flag == "--bonus":
-            draw_data_and_regression(mileages, prices, theta, xmin, xmax)
-            predictions: list[list[float]] = linear_regression.model(matrix_x, theta)
-            r_squared: float = linear_regression.coefficients_determination(matrix_y, predictions)
-            print(f"Model accuracy (R^2 score): {round(r_squared, 4) * 100} %")
+            plot.draw_regression(dataset.target, dataset.features, theta, xmin, xmax)
+            predictions: Matrix = linear_regression.matrix_model(x, theta)
+            r_squared: float = linear_regression.r_squared(y, predictions)
+            print(f"Model accuracy (R^2 score): {r_squared:.4f}.")
