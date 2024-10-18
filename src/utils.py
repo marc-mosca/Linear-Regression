@@ -12,15 +12,15 @@ from sys import exit
 from typing import Any
 
 
-def read_json(path: str) -> tuple[Matrix, float, float]:
+def read_json(filepath: str) -> tuple[Matrix, float, float]:
     try:
-        with open(path, mode="r") as file:
+        with open(filepath, mode="r") as file:
             data: dict[str, Any] = load(file)
         return Matrix([[data["theta0"]], [data["theta1"]]]), data["xmin"], data["xmax"]
     except JSONDecodeError:
-        exit(f"The file {path} contains invalid JSON.")
+        exit(f"The file {filepath} contains invalid JSON.")
     except Exception as e:
-        print(f"Model file {path} not found, initializing theta to 0.")
+        print(f"Model file {filepath} doesn't contain the necessary information (theta0, theta1, xmin, xmax), so initializing theta to 0.")
         return Matrix([[0.0], [0.0]]), 0.0, 1.0
 
 
