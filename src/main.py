@@ -11,7 +11,6 @@ from linear_regression import LinearRegression
 from matrix import Matrix
 from parser_manager import ParserManager
 from plot import Plot
-from random import uniform
 from utils import read_json, write_json
 
 
@@ -42,7 +41,7 @@ if __name__ == '__main__':
 
         x: Matrix = Matrix([f + b for f, b in zip(normalized_features.values, bias.values)])
         y: Matrix = dataset.target
-        theta: Matrix = Matrix([[uniform(-0.01, 0.01)], [uniform(-0.01, 0.01)]])
+        theta: Matrix = Matrix([[0.0], [0.0]])
 
         theta = linear_regression.gradient_descent(x, y, theta)
 
