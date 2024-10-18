@@ -1,6 +1,6 @@
 # Linear Regression
 
-This is the first project dealing with machine learning in the 42 curriculum. The aim of this project is to predict the price of a car based on its kilo-meterage.
+This is the first project dealing with machine learning in the 42 curriculum. The aim of this project is to predict the price of a car based on its mileage.
 
 ## Prerequisites
 
