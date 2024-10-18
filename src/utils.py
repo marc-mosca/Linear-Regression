@@ -17,8 +17,14 @@ def read_json(filepath: str) -> tuple[Matrix, float, float]:
         with open(filepath, mode="r") as file:
             data: dict[str, Any] = load(file)
         return Matrix([[data["theta0"]], [data["theta1"]]]), data["xmin"], data["xmax"]
+    except FileNotFoundError:
+        print(f"The file {filepath} was not found, so initializing theta to 0.")
+        return Matrix([[0.0], [0.0]]), 0.0, 1.0
     except JSONDecodeError:
         exit(f"The file {filepath} contains invalid JSON.")
+    except PermissionError:
+        print(f"The file {filepath} was not readable, so initializing theta to 0.")
+        return Matrix([[0.0], [0.0]]), 0.0, 1.0
     except Exception as e:
         print(f"Model file {filepath} doesn't contain the necessary information (theta0, theta1, xmin, xmax), so initializing theta to 0.")
         return Matrix([[0.0], [0.0]]), 0.0, 1.0

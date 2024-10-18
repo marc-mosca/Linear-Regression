@@ -8,9 +8,8 @@
 .DEFAULT_GOAL := help
 
 .PHONY: bonus
-bonus: ## Executes the bonus training program with "./data/dataset.csv" file.
-	$(MAKE) install
-	python3 src/main.py --bonus ./data/dataset.csv
+bonus: ## Executes the bonus training program.
+	python3 src/bonus.py
 
 .PHONY: help
 help: ## Displays this help menu of commands available for the project.
@@ -25,10 +24,8 @@ install: ## Installs the python dependencies needed for the project.
 
 .PHONY: prediction
 prediction: ## Executes the prediction program.
-	$(MAKE) install
-	python3 src/main.py --prediction
+	python3 src/prediction.py
 
 .PHONY: training
-training: ## Executes the training program with "./data/dataset.csv" file.
-	$(MAKE) install
-	python3 src/main.py --training ./data/dataset.csv
+training: ## Executes the training program.
+	python3 src/training.py
