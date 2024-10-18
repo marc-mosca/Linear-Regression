@@ -22,7 +22,7 @@ cd Linear-Regression
 make install
 ```
 
-3. Launch the program :
+3. Launch the program of your choice
 
 Training :
 
