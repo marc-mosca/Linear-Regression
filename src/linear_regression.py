@@ -20,7 +20,7 @@ class LinearRegression(object):
         return (x - xmin) / (xmax - xmin)
 
     def model(self, x: float, theta: Matrix) -> float:
-        return theta.values[0][0] + (theta.values[1][0] * x)
+        return (theta.values[0][0] * x) + theta.values[1][0]
 
     def matrix_model(self, x: Matrix, theta: Matrix) -> Matrix:
         return Matrix(x.multiply(theta.values))

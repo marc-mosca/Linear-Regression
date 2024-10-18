@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
         theta = linear_regression.gradient_descent(x, y, theta)
 
-        data: dict[str: float] = {"theta0": theta.values[1][0], "theta1": theta.values[0][0], "xmin": xmin, "xmax": xmax}
+        data: dict[str: float] = {"theta0": theta.values[0][0], "theta1": theta.values[1][0], "xmin": xmin, "xmax": xmax}
         write_json(TRAINED_MODEL_PATH, data)
 
         print(f"Training completed. Model saved in '{TRAINED_MODEL_PATH}'.")
