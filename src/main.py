@@ -54,5 +54,5 @@ if __name__ == '__main__':
         if parser.flag == "--bonus":
             plot.draw_regression(dataset.target, dataset.features, theta, xmin, xmax)
             predictions: Matrix = linear_regression.matrix_model(x, theta)
-            r_squared: float = linear_regression.r_squared(y, predictions)
+            r_squared: float = linear_regression.coefficient_determination(y, predictions)
             print(f"Model accuracy (R^2 score): {r_squared:.4f}.")

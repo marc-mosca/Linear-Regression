@@ -40,7 +40,7 @@ class LinearRegression(object):
             theta: Matrix = Matrix(theta.substract(updated_theta.values))
         return theta
 
-    def r_squared(self, y: Matrix, predictions: Matrix) -> float:
+    def coefficient_determination(self, y: Matrix, predictions: Matrix) -> float:
         y_shape: tuple[int, int] = y.shape()
         errors: Matrix = Matrix(y.substract(predictions.values))
         squared_errors: Matrix = Matrix(errors.square())
