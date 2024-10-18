@@ -42,10 +42,6 @@ Bonus :
 make bonus
 ```
 
-## Technologies used
-
-- **Python**
-
 ## Contact
 
 You can send me email at **mmosca@student.42lyon.fr**
