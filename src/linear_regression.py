@@ -25,7 +25,7 @@ class LinearRegression(object):
     def matrix_model(self, x: Matrix, theta: Matrix) -> Matrix:
         return Matrix(x.multiply(theta.values))
 
-    def cost_function(self, x: Matrix, y: Matrix, theta: Matrix):
+    def cost_function(self, x: Matrix, y: Matrix, theta: Matrix) -> float:
         m: int = x.shape()[0]
         predictions: Matrix = self.matrix_model(x, theta)
         errors: Matrix = Matrix(predictions.substract(y.values))
