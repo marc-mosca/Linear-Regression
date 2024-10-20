@@ -25,6 +25,13 @@ class LinearRegression(object):
     def matrix_model(self, x: Matrix, theta: Matrix) -> Matrix:
         return Matrix(x.multiply(theta.values))
 
+    def cost_function(self, x: Matrix, y: Matrix, theta: Matrix):
+        m: int = x.shape()[0]
+        predictions: Matrix = self.matrix_model(x, theta)
+        errors: Matrix = Matrix(predictions.substract(y.values))
+        squared: Matrix = Matrix(errors.square())
+        return 1 / (2 * m) * squared.sum()
+
     def gradient(self, x: Matrix, y: Matrix, theta: Matrix) -> Matrix:
         m: int = x.shape()[0]
         predictions: Matrix = self.matrix_model(x, theta)
@@ -41,10 +48,10 @@ class LinearRegression(object):
         return theta
 
     def coefficient_determination(self, y: Matrix, predictions: Matrix) -> float:
-        y_shape: tuple[int, int] = y.shape()
-        errors: Matrix = Matrix(y.substract(predictions.values))
+        n: int = y.shape()[0]
+        errors: Matrix = Matrix(predictions.substract(y.values))
         squared_errors: Matrix = Matrix(errors.square())
-        y_mean: Matrix = Matrix([[y.mean() * y_shape[1]] for _ in range(y_shape[0])])
-        deviations: Matrix = Matrix(y.substract(y_mean.values))
+        means: Matrix = Matrix([[y.mean()] for _ in range(n)])
+        deviations: Matrix = Matrix(y.substract(means.values))
         squared_deviations: Matrix = Matrix(deviations.square())
         return 1 - (squared_errors.sum() / squared_deviations.sum())
