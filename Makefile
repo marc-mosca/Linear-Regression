@@ -5,11 +5,13 @@
 #	Created by Marc MOSCA on 15/10/2024.
 #
 
+PYTHON = python3
+
 .DEFAULT_GOAL := help
 
 .PHONY: bonus
 bonus: ## Executes the bonus training program.
-	python3 src/bonus.py
+	$(PYTHON) sources/bonus.py
 
 .PHONY: help
 help: ## Displays this help menu of commands available for the project.
@@ -20,12 +22,12 @@ help: ## Displays this help menu of commands available for the project.
 
 .PHONY: install
 install: ## Installs the python dependencies needed for the project.
-	python3 -m pip install -r requirements.txt
+	$(PYTHON) -m pip install -r requirements.txt
 
 .PHONY: prediction
 prediction: ## Executes the prediction program.
-	python3 src/prediction.py
+	$(PYTHON) sources/prediction.py
 
 .PHONY: training
 training: ## Executes the training program.
-	python3 src/training.py
+	$(PYTHON) sources/training.py
