@@ -33,7 +33,7 @@ tmp\theta_0 = learningRate * \frac{1}{m} \displaystyle\sum_{i=0}^{m-1} (estimate
 $$
 
 $$
-tmp\theta_1 = learningRate * \frac{1}{m} \displaystyle\sum_{i=0}^{m-1} (estimatePrice(mileage[i]) - price[i])
+tmp\theta_1 = learningRate * \frac{1}{m} \displaystyle\sum_{i=0}^{m-1} (estimatePrice(mileage[i]) - price[i]) * mileage[i]
 $$
 
 Note that the estimatePrice is the same as in our first program, but here it uses your temporary, lastly computed $\theta_0$ and $\theta_1$.
