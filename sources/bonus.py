@@ -38,7 +38,6 @@ writer_json("./models/trained_model.json", data)
 print(f"Training completed. Model saved in './models/trained_model.json'.")
 print_regression(target, features, theta, xmin, xmax)
 
-predictions: Matrix = model(x, theta)
-r_squared: float = coefficient_determination(y, predictions)
+r_squared: float = coefficient_determination(x, y, theta)
 
 print(f"Model accuracy (R^2 score): {round(r_squared, 4) * 100} %.")
