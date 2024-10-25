@@ -70,7 +70,7 @@ class Matrix:
             return matrix
         else:
             if self.__cols != other.__rows:
-                exit("")
+                exit("Number of columns must equal number of rows.")
             matrix: Matrix = self._zeroed_matrix((self.__rows, other.__cols))
             for i in range(self.__rows):
                 for j in range(other.__cols):
