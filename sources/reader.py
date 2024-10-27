@@ -8,7 +8,6 @@
 from csv import reader
 from json import JSONDecodeError, load
 from math import isnan
-
 from matrix import Matrix
 from sys import exit
 from typing import Any, List, Tuple
