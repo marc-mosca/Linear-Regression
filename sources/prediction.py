@@ -11,10 +11,12 @@ from sys import exit
 
 
 (theta, xmin, xmax) = reader_json("./models/trained_model.json")
-mileage: float = float(input("Enter the mileage (in km) of the car: "))
+mileage: str = input("Enter the mileage (in km) of the car: ")
 
-if mileage <= 0.0:
-    exit(f"Mileage cannot be equal or less than zero: {mileage}")
+if not mileage.isdigit():
+    exit(f"Mileage must be a positive number: {mileage}")
+
+mileage: float = float(mileage)
 
 normalized_mileage: float = normalize(mileage, xmin, xmax)
 price: float = model(normalized_mileage, theta)
