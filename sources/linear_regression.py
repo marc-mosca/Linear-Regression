@@ -33,7 +33,6 @@ def gradient_descent(x: Matrix, y: Matrix, theta: Matrix, learning_rate: float, 
     return theta
 
 def coefficient_determination(x: Matrix, y: Matrix, theta: Matrix) -> float:
-    n: int = y.shape()[0]
     predictions: Matrix = model(x, theta)
-    means: Matrix = Matrix([[y.mean()] for _ in range(n)])
+    means: float = y.mean()
     return 1 - ((y - predictions).square().sum() / (y - means).square().sum())

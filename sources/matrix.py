@@ -52,14 +52,21 @@ class Matrix:
                 matrix.__list[row][column] = self.__list[row][column] + other.__list[row][column]
         return matrix
 
-    def __sub__(self, other: "Matrix") -> "Matrix":
-        if self.shape() != other.shape():
-            exit("Both matrices must have the same dimensions.")
-        matrix: Matrix = self._zeroed_matrix()
-        for row in range(self.__rows):
-            for column in range(self.__cols):
-                matrix.__list[row][column] = self.__list[row][column] - other.__list[row][column]
-        return matrix
+    def __sub__(self, other: Union["Matrix", Numbers]) -> "Matrix":
+        if isinstance(other, (int, float)):
+            matrix: Matrix = self._zeroed_matrix()
+            for row in range(self.__rows):
+                for column in range(self.__cols):
+                    matrix.__list[row][column] = self.__list[row][column] - other
+            return matrix
+        else:
+            if self.shape() != other.shape():
+                exit("Both matrices must have the same dimensions.")
+            matrix: Matrix = self._zeroed_matrix()
+            for row in range(self.__rows):
+                for column in range(self.__cols):
+                    matrix.__list[row][column] = self.__list[row][column] - other.__list[row][column]
+            return matrix
 
     def __mul__(self, other: Union["Matrix", Numbers]) -> "Matrix":
         if isinstance(other, (int, float)):
