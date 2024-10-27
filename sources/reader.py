@@ -7,6 +7,8 @@
 
 from csv import reader
 from json import JSONDecodeError, load
+from math import isnan
+
 from matrix import Matrix
 from sys import exit
 from typing import Any, List, Tuple
@@ -34,6 +36,9 @@ def reader_json(path: str) -> Tuple[Matrix, float, float]:
         with open(path, mode="r") as file:
             data: dict[str, Any] = load(file)
             (theta0, theta1, xmin, xmax) = data.values()
+            if isnan(theta0) or isnan(theta1) or isnan(xmin) or isnan(xmax):
+                print(f"Invalid float data in JSON, so intializing values to 0.")
+                return Matrix([[0.0], [0.0]]), 0.0, 1.0
         return Matrix([[theta0], [theta1]]), xmin, xmax
     except FileNotFoundError:
         print(f"The file {path} was not found, so initializing values to 0.")
