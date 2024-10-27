@@ -12,6 +12,13 @@ from matplotlib.pyplot import grid, legend, plot, scatter, show, title, xlabel, 
 def print_matrix(title: str, matrix: Matrix) -> None:
     print(f"{title}:\n{matrix}")
 
+def print_cost(cost_history: list[float]) -> None:
+    plot(cost_history)
+    xlabel('Itération')
+    ylabel('Coût')
+    title('Évolution du coût')
+    show()
+
 def print_dataset(target: Matrix, features: Matrix) -> None:
     mileage: list[float] = [m[0] for m in features.get()]
     price: list[float] = [p[0] for p in target.get()]
