@@ -19,13 +19,8 @@ try:
         exit(f"Mileage must be a positive number: {mileage}")
 
     mileage: float = float(mileage)
-
     normalized_mileage: float = normalize(mileage, xmin, xmax)
     price: float = model(normalized_mileage, theta)
-
-    if price < 0:
-        exit("The mileage is too high to set a price greater than 0.")
-
     print(f"The estimated price for a car with {mileage} km is ${price:.2f}")
 except KeyboardInterrupt:
     exit("\nError: handle keyboard interruption (ctrl-c).")
